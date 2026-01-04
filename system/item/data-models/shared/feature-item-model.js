@@ -7,6 +7,7 @@ export class FeatureItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    // Item uses
     Object.assign(schema, itemUsesFields())
 
     // Points

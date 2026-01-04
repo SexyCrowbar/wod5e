@@ -6,6 +6,9 @@ export class TraitItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    // Which dice are in the item
+    schema.dice = new fields.NumberField({ initial: 0 })
+
     return schema
   }
 }
