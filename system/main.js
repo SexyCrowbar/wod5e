@@ -2,9 +2,12 @@
 import { WoDActor } from './actor/actor.js'
 import { WoDActorDirectory } from './ui/wod-actor-directory.js'
 import { ProseMirrorSettings } from './ui/prosemirror.js'
+import { WoDActorBase } from './actor/wod-actor-base.js'
+import { WoDActorModel } from './actor/data-models/base-actor-model.js'
 // Item sheets
 import { WoDItem } from './item/item.js'
 import { WoDItemBase } from './item/wod-item-base.js'
+import { WoDItemModel } from './item/data-models/base-item-model.js'
 // Custom UI Classes
 import { WoDChatLog } from './ui/wod-chat-log.js'
 import { WoDChatMessage } from './ui/wod-chat-message.js'
@@ -34,6 +37,11 @@ import {
 import { migrateWorld } from './scripts/migration.js'
 import { wod5eAPI } from './api/wod5e-api.js'
 import { WOD5eRoll } from './scripts/system-rolls.js'
+import { DiceRegistry } from './api/def/dice.js'
+import { _rollItem } from './actor/scripts/item-roll.js'
+import { _updateCSSVariable, cssVariablesRecord } from './scripts/update-css-variables.js'
+import { _updateToken } from './actor/wta/scripts/forms.js'
+import { RollPromptSockets } from './sockets/roll-prompt.js'
 // WOD5E Definitions
 import { Systems } from './api/def/systems.js'
 import { Attributes } from './api/def/attributes.js'
@@ -46,12 +54,6 @@ import { Edges } from './api/def/edges.js'
 import { Renown } from './api/def/renown.js'
 import { WereForms } from './api/def/were-forms.js'
 import { Gifts } from './api/def/gifts.js'
-import { _rollItem } from './actor/scripts/item-roll.js'
-import { _updateCSSVariable, cssVariablesRecord } from './scripts/update-css-variables.js'
-import { _updateToken } from './actor/wta/scripts/forms.js'
-import { RollPromptSockets } from './sockets/roll-prompt.js'
-import { WoDActorBase } from './actor/wod-actor-base.js'
-import { DiceRegistry } from './api/def/dice.js'
 
 // Register the WOD5E global
 window.WOD5E = {
@@ -68,6 +70,8 @@ window.WOD5E = {
   },
   WoDItemBase,
   WoDActorBase,
+  WoDActorModel,
+  WoDItemModel,
   Systems,
   Attributes,
   Skills,
