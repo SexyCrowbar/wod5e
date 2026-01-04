@@ -53,29 +53,9 @@ export function werewolfFields() {
     selectedGift: new fields.StringField({ initial: '' }),
     selectedGiftPower: new fields.StringField({ initial: '' }),
 
-    gifts: new fields.SchemaField({
-      native: createGiftSchema(),
-      ragabash: createGiftSchema(),
-      theurge: createGiftSchema(),
-      philodox: createGiftSchema(),
-      galliard: createGiftSchema(),
-      ahroun: createGiftSchema(),
-      blackfury: createGiftSchema(),
-      bonegnawer: createGiftSchema(),
-      childrenofgaia: createGiftSchema(),
-      galestalker: createGiftSchema(),
-      ghostcouncil: createGiftSchema(),
-      glasswalker: createGiftSchema(),
-      hartwarden: createGiftSchema(),
-      redtalon: createGiftSchema(),
-      shadowlord: createGiftSchema(),
-      silentstrider: createGiftSchema(),
-      silverfang: createGiftSchema(),
-
-      rites: new fields.SchemaField({
-        description: new fields.StringField({ initial: '' }),
-        powers: new fields.ArrayField(new fields.ObjectField())
-      })
+    gifts: new fields.ObjectField({
+      initial: {},
+      validate: false
     })
   }
 }
@@ -89,6 +69,7 @@ function createWereformSchema() {
   })
 }
 
+/*
 function createGiftSchema() {
   return new fields.SchemaField({
     description: new fields.StringField({ initial: '' }),
@@ -98,3 +79,4 @@ function createGiftSchema() {
     selected: new fields.BooleanField({ initial: false })
   })
 }
+*/

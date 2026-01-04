@@ -20,32 +20,14 @@ export function vampireFields() {
     selectedDiscipline: new fields.StringField({ initial: '' }),
     selectedDisciplinePower: new fields.StringField({ initial: '' }),
 
-    disciplines: new fields.SchemaField({
-      animalism: createDisciplineSchema(),
-      auspex: createDisciplineSchema(),
-      celerity: createDisciplineSchema(),
-      dominate: createDisciplineSchema(),
-      fortitude: createDisciplineSchema(),
-      obfuscate: createDisciplineSchema(),
-      potence: createDisciplineSchema(),
-      presence: createDisciplineSchema(),
-      protean: createDisciplineSchema(),
-      sorcery: createDisciplineSchema(),
-      oblivion: createDisciplineSchema(),
-      alchemy: createDisciplineSchema(),
-
-      rituals: new fields.SchemaField({
-        description: new fields.StringField({ initial: '' }),
-        powers: new fields.ArrayField(new fields.ObjectField())
-      }),
-      ceremonies: new fields.SchemaField({
-        description: new fields.StringField({ initial: '' }),
-        powers: new fields.ArrayField(new fields.ObjectField())
-      })
+    disciplines: new fields.ObjectField({
+      initial: {},
+      validate: false
     })
   }
 }
 
+/*
 function createDisciplineSchema() {
   return new fields.SchemaField({
     description: new fields.StringField({ initial: '' }),
@@ -55,3 +37,4 @@ function createDisciplineSchema() {
     selected: new fields.BooleanField({ initial: false })
   })
 }
+*/

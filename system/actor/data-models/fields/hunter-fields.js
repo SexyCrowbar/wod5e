@@ -18,23 +18,14 @@ export function hunterFields() {
     selectedEdge: new fields.StringField({ initial: '' }),
     selectedEdgePerk: new fields.StringField({ initial: '' }),
 
-    edges: new fields.SchemaField({
-      arsenal: createEdgeSchema(),
-      fleet: createEdgeSchema(),
-      ordnance: createEdgeSchema(),
-      library: createEdgeSchema(),
-      improvisedgear: createEdgeSchema(),
-      globalaccess: createEdgeSchema(),
-      dronejockey: createEdgeSchema(),
-      beastwhisperer: createEdgeSchema(),
-      sensetheunnatural: createEdgeSchema(),
-      repeltheunnatural: createEdgeSchema(),
-      thwarttheunnatural: createEdgeSchema(),
-      artifact: createEdgeSchema()
+    edges: new fields.ObjectField({
+      initial: {},
+      validate: false
     })
   }
 }
 
+/*
 function createEdgeSchema() {
   return new fields.SchemaField({
     description: new fields.StringField({ initial: '' }),
@@ -45,3 +36,4 @@ function createEdgeSchema() {
     selected: new fields.BooleanField({ initial: false })
   })
 }
+*/
