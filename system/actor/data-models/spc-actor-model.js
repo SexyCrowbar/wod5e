@@ -34,7 +34,7 @@ export class SPCActorModel extends WoDActorModel {
     })
 
     // Standard Dice fields
-    schema.standarddicepools = new fields.SchemaField(standardDiceFields)
+    schema.standarddicepools = new fields.SchemaField(standardDiceFields())
 
     // Exceptional Dice fields
     schema.exceptionaldicepools = new fields.SchemaField(skillFields())
