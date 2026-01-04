@@ -95,6 +95,9 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     schema.appearance = new fields.HTMLField({ initial: '' })
     schema.equipment = new fields.HTMLField({ initial: '' })
 
+    // Place for splat-specific bonuses to be defined
+    schema.bonuses = new fields.ObjectField()
+
     // Splat-specific fields
     Object.assign(schema, vampireFields())
     Object.assign(schema, werewolfFields())

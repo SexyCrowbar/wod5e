@@ -2,6 +2,14 @@ const fields = foundry.data.fields
 
 export function werewolfFields() {
   return {
+    // Crinos health fields
+    crinosHealth: new fields.SchemaField({
+      aggravated: new fields.NumberField({ initial: 0 }),
+      superficial: new fields.NumberField({ initial: 0 }),
+      max: new fields.NumberField({ initial: 4 }),
+      value: new fields.NumberField({ initial: 4 })
+    }),
+
     balance: new fields.SchemaField({
       hauglosk: new fields.SchemaField({
         value: new fields.NumberField({ initial: 1 })
