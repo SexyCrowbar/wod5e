@@ -18,7 +18,9 @@ export class SPCActorModel extends WoDActorModel {
     schema.manifestation = new fields.HTMLField({ initial: '' })
 
     // Power
-    schema.power = new fields.NumberField({ initial: 0 })
+    schema.power = new fields.SchemaField({
+      value: new fields.NumberField({ initial: 0 })
+    })
 
     // General Difficulty
     schema.generaldifficulty = new fields.SchemaField({
