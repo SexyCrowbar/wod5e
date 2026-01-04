@@ -83,7 +83,9 @@ export function werewolfFields() {
 function createWereformSchema() {
   return new fields.SchemaField({
     description: new fields.HTMLField({ initial: '' }),
-    img: new fields.StringField({ initial: '' })
+    token: new fields.SchemaField({
+      img: new fields.StringField({ initial: '' })
+    })
   })
 }
 

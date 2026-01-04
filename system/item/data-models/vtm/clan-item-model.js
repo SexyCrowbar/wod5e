@@ -6,6 +6,8 @@ export class ClanItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.bane = new fields.HTMLField({ initial: '' })
+
     return schema
   }
 }

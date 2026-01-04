@@ -110,24 +110,33 @@ Hooks.once('init', async function () {
 
   // Loop through each entry in the actorTypesList and register their sheet classes
   const actorTypesList = ActorTypes.getList({})
-  for (const [, value] of Object.entries(actorTypesList)) {
-    const { label, types, sheetClass } = value
+  for (const [id, value] of Object.entries(actorTypesList)) {
+    const { types, sheetClass, sheetModel } = value
 
-    foundry.documents.collections.Actors.registerSheet('wod5e', sheetClass, {
-      label,
+    // Add to the list of data models
+    Object.assign(CONFIG.Actor.dataModels, {
+      [id]: sheetModel
+    })
+
+    // Register the sheet with Foundry's DocumentSheetConfig
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, 'wod5e', sheetClass, {
       types,
       makeDefault: true
     })
   }
 
-  // Register item sheet application classes
   // Loop through each entry in the itemTypesList and register their sheet classes
   const itemTypesList = ItemTypes.getList({})
-  for (const [, value] of Object.entries(itemTypesList)) {
-    const { label, types, sheetClass } = value
+  for (const [id, value] of Object.entries(itemTypesList)) {
+    const { types, sheetClass, sheetModel } = value
 
-    foundry.documents.collections.Items.registerSheet('wod5e', sheetClass, {
-      label,
+    // Add to the list of data models
+    Object.assign(CONFIG.Item.dataModels, {
+      [id]: sheetModel
+    })
+
+    // Register the sheet with Foundry's DocumentSheetConfig
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, 'wod5e', sheetClass, {
       types,
       makeDefault: true
     })

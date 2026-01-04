@@ -6,6 +6,8 @@ export class BoonItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.boontype = new fields.StringField({ initial: '' })
+
     return schema
   }
 }

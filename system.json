@@ -39,6 +39,39 @@
   "background": "systems/wod5e/assets/images/wodcity.jpg",
   "manifest": "https://github.com/WoD5E-Developers/wod5e/releases/download/5.3.7/system.json",
   "download": "https://github.com/WoD5E-Developers/wod5e/releases/download/5.3.7/wod5e.zip",
+  "documentTypes": {
+    "Actor": {
+      "mortal": {},
+      "spc": {},
+      "vampire": {},
+      "ghoul": {},
+      "hunter": {},
+      "werewolf": {},
+      "group": {}
+    },
+    "Item": {
+      "feature": {},
+      "customRoll": {},
+      "armor": {},
+      "weapon": {},
+      "gear": {},
+      "trait": {},
+      "condition": {},
+      "clan": {},
+      "predatorType": {},
+      "resonance": {},
+      "power": {},
+      "boon": {},
+      "creed": {},
+      "drive": {},
+      "perk": {},
+      "edgepool": {},
+      "tribe": {},
+      "auspice": {},
+      "talisman": {},
+      "gift": {}
+    }
+  },
   "flags": {
     "hotReload": {
       "extensions": [

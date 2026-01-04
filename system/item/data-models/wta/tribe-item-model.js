@@ -6,6 +6,13 @@ export class TribeItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.patronSpirit = new fields.SchemaField({
+      name: new fields.StringField({ initial: '' }),
+      description: new fields.HTMLField({ initial: '' }),
+      favor: new fields.HTMLField({ initial: '' }),
+      ban: new fields.HTMLField({ initial: '' })
+    })
+
     return schema
   }
 }
