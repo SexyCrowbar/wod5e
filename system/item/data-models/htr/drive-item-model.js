@@ -6,6 +6,8 @@ export class DriveItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.redemption = new fields.HTMLField({ initial: '' })
+
     return schema
   }
 }

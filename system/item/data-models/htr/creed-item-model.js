@@ -6,6 +6,10 @@ export class CreedItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.edges = new fields.StringField({ initial: '' })
+    schema.drives = new fields.StringField({ initial: '' })
+    schema.desperationFields = new fields.StringField({ initial: '' })
+
     return schema
   }
 }

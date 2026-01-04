@@ -6,6 +6,8 @@ export class PerkItemModel extends WoDItemModel {
 
     const schema = super.defineSchema()
 
+    schema.edge = new fields.StringField({ initial: 'arsenal' })
+
     return schema
   }
 }
