@@ -93,24 +93,6 @@ export const preloadHandlebarsTemplates = async function () {
     'systems/wod5e/display/shared/items/parts/item-uses.hbs',
     'systems/wod5e/display/shared/items/parts/source.hbs',
 
-    // Item Sheet Partials (Dropdowns)
-    'systems/wod5e/display/shared/items/parts/skills.hbs',
-    'systems/wod5e/display/shared/items/parts/disciplines.hbs',
-    'systems/wod5e/display/shared/items/parts/edges.hbs',
-    'systems/wod5e/display/shared/items/parts/attributes.hbs',
-    'systems/wod5e/display/shared/items/parts/gifts.hbs',
-    'systems/wod5e/display/shared/items/parts/renown.hbs',
-
-    // Dice Tray Partials
-    // 'systems/wod5e/display/ui/parts/select-character.hbs',
-    // 'systems/wod5e/display/ui/parts/pool1-select-attribute.hbs',
-    // 'systems/wod5e/display/ui/parts/pool1-select-skill.hbs',
-    // 'systems/wod5e/display/ui/parts/pool1-select-discipline.hbs',
-    // 'systems/wod5e/display/ui/parts/pool2-select-attribute.hbs',
-    // 'systems/wod5e/display/ui/parts/pool2-select-skill.hbs',
-    // 'systems/wod5e/display/ui/parts/pool2-select-discipline.hbs',
-    // 'systems/wod5e/display/ui/parts/pool2-nothing.hbs',
-
     // Roll dialog Partials
     'systems/wod5e/display/ui/parts/roll-dialog-base.hbs',
     'systems/wod5e/display/ui/parts/situational-modifiers.hbs',
