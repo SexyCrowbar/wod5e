@@ -52,6 +52,7 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     })
 
     // XP fields
+    schema.experiences = new fields.ArrayField(new fields.ObjectField())
     schema.exp = new fields.SchemaField({
       value: new fields.NumberField({ initial: 0 }),
       max: new fields.NumberField({ initial: 0 })
@@ -78,10 +79,10 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     })
 
     // Attribute fields
-    schema.attributes = schema.attributes = new fields.SchemaField(attributeFields)
+    schema.attributes = new fields.SchemaField(attributeFields)
 
     // Skill fields
-    schema.skills = new fields.SchemaField(skillFields)
+    schema.skills = new fields.SchemaField(skillFields())
 
     // Setting fields
     Object.assign(schema, settingFields)
@@ -95,9 +96,9 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     schema.equipment = new fields.HTMLField({ initial: '' })
 
     // Splat-specific fields
-    Object.assign(schema, vampireFields)
-    Object.assign(schema, werewolfFields)
-    Object.assign(schema, hunterFields)
+    Object.assign(schema, vampireFields())
+    Object.assign(schema, werewolfFields())
+    Object.assign(schema, hunterFields())
 
     return schema
   }

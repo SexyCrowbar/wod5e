@@ -301,6 +301,31 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
 
   static async onSubmitActorForm(event, form, formData) {
     const target = event.target
+
+    // We do this because it was supported in the old system, and we still want
+    // users to be able to change between character types painlessly
+    if (target.name === 'type') {
+      // Maintain a copy of the old 'system' object
+      const oldSystemObject = foundry.utils.deepClone(this.actor.system)
+
+      // Update the actor type (Foundry requires you to replace the 'system' object while doing this)
+      await this.actor.update(
+        {
+          type: target.value,
+          system: {}
+        },
+        {
+          recursive: false
+        }
+      )
+
+      // Ensure the actor's old data gets put back in place
+      await this.actor.update({
+        system: oldSystemObject
+      })
+    }
+
+    // Handle odd quirks with updating special inputs
     if (target.tagName === 'INPUT') {
       let value
 

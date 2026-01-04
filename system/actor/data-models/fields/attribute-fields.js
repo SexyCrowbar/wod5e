@@ -12,6 +12,12 @@ export const attributeFields = {
   resolve: createAttributeSchema()
 }
 
+export const standardDiceFields = {
+  physical: createAttributeSchema(),
+  social: createAttributeSchema(),
+  mental: createAttributeSchema()
+}
+
 function createAttributeSchema() {
   return new fields.SchemaField({
     value: new fields.NumberField({ initial: 1 })

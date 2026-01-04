@@ -12,6 +12,10 @@ import { GhoulActorSheet } from '../../actor/vtm/ghoul-actor-sheet.js'
 import { HunterActorSheet } from '../../actor/htr/hunter-actor-sheet.js'
 // Werewolf system
 import { WerewolfActorSheet } from '../../actor/wta/werewolf-actor-sheet.js'
+// Actor models
+import { WoDActorModel } from '../../actor/data-models/base-actor-model.js'
+import { SPCActorModel } from '../../actor/data-models/spc-actor-model.js'
+import { GroupActorModel } from '../../actor/data-models/group-actor-model.js'
 
 export class ActorTypes extends BaseDefinitionClass {
   // Run any necessary compilation on ready
@@ -23,43 +27,50 @@ export class ActorTypes extends BaseDefinitionClass {
   static mortal = {
     label: 'WOD5E.Mortal',
     types: ['mortal'],
-    sheetClass: MortalActorSheet
+    sheetClass: MortalActorSheet,
+    sheetModel: WoDActorModel
   }
 
   static spc = {
     label: 'WOD5E.SPC.Label',
     types: ['spc'],
-    sheetClass: SPCActorSheet
+    sheetClass: SPCActorSheet,
+    sheetModel: SPCActorModel
   }
 
   static vampire = {
     label: 'TYPES.Actor.vampire',
     types: ['vampire'],
-    sheetClass: VampireActorSheet
+    sheetClass: VampireActorSheet,
+    sheetModel: WoDActorModel
   }
 
   static ghoul = {
     label: 'WOD5E.VTM.Ghoul',
     types: ['ghoul'],
-    sheetClass: GhoulActorSheet
+    sheetClass: GhoulActorSheet,
+    sheetModel: WoDActorModel
   }
 
   static hunter = {
     label: 'TYPES.Actor.hunter',
     types: ['hunter'],
-    sheetClass: HunterActorSheet
+    sheetClass: HunterActorSheet,
+    sheetModel: WoDActorModel
   }
 
   static werewolf = {
     label: 'TYPES.Actor.werewolf',
     types: ['werewolf'],
-    sheetClass: WerewolfActorSheet
+    sheetClass: WerewolfActorSheet,
+    sheetModel: WoDActorModel
   }
 
   static group = {
     label: 'WOD5E.GroupSheet',
     types: ['group'],
-    sheetClass: GroupActorSheet
+    sheetClass: GroupActorSheet,
+    sheetModel: GroupActorModel
   }
 }
 
