@@ -1,10 +1,3 @@
-// Actor sheets
-import { WoDActor } from './actor/actor.js'
-import { WoDActorDirectory } from './ui/wod-actor-directory.js'
-import { ProseMirrorSettings } from './ui/prosemirror.js'
-// Item sheets
-import { WoDItem } from './item/item.js'
-import { WoDItemBase } from './item/wod-item-base.js'
 // Custom UI Classes
 import { WoDChatLog } from './ui/wod-chat-log.js'
 import { WoDChatMessage } from './ui/wod-chat-message.js'
@@ -20,6 +13,16 @@ import {
   _updateHeaderFontPreference,
   _updateXpIconOverrides
 } from './scripts/settings.js'
+// Actor sheets
+import { WoDActor } from './actor/actor.js'
+import { WoDActorDirectory } from './ui/wod-actor-directory.js'
+import { ProseMirrorSettings } from './ui/prosemirror.js'
+import { WoDActorModel } from './actor/data-models/base-actor-model.js'
+import { WoDActorBase } from './actor/wod-actor-base.js'
+// Item sheets
+import { WoDItem } from './item/item.js'
+import { WoDItemBase } from './item/wod-item-base.js'
+import { WoDItemModel } from './item/data-models/base-item-model.js'
 // WOD5E functions and classes
 import {
   MortalDie,
@@ -28,11 +31,17 @@ import {
   HunterDie,
   HunterDesperationDie,
   WerewolfDie,
-  WerewolfRageDie
+  WerewolfRageDie,
+  WOD5eDie
 } from './dice/splat-dice.js'
 import { migrateWorld } from './scripts/migration.js'
 import { wod5eAPI } from './api/wod5e-api.js'
 import { WOD5eRoll } from './scripts/system-rolls.js'
+import { _rollItem } from './actor/scripts/item-roll.js'
+import { _updateCSSVariable, cssVariablesRecord } from './scripts/update-css-variables.js'
+import { _updateToken } from './actor/wta/scripts/forms.js'
+import { RollPromptSockets } from './sockets/roll-prompt.js'
+import { DiceRegistry } from './api/def/dice.js'
 // WOD5E Definitions
 import { Systems } from './api/def/systems.js'
 import { Attributes } from './api/def/attributes.js'
@@ -45,11 +54,6 @@ import { Edges } from './api/def/edges.js'
 import { Renown } from './api/def/renown.js'
 import { WereForms } from './api/def/were-forms.js'
 import { Gifts } from './api/def/gifts.js'
-import { _rollItem } from './actor/scripts/item-roll.js'
-import { _updateCSSVariable, cssVariablesRecord } from './scripts/update-css-variables.js'
-import { _updateToken } from './actor/wta/scripts/forms.js'
-import { RollPromptSockets } from './sockets/roll-prompt.js'
-import { WoDActorBase } from './actor/wod-actor-base.js'
 
 // Register the WOD5E global
 window.WOD5E = {
@@ -66,6 +70,8 @@ window.WOD5E = {
   },
   WoDItemBase,
   WoDActorBase,
+  WoDActorModel,
+  WoDItemModel,
   Systems,
   Attributes,
   Skills,
@@ -76,7 +82,9 @@ window.WOD5E = {
   Edges,
   Renown,
   Gifts,
-  WereForms
+  WereForms,
+  WOD5eDie,
+  DiceRegistry
 }
 
 // Anything that needs to be ran alongside the initialisation of the world
@@ -106,24 +114,33 @@ Hooks.once('init', async function () {
 
   // Loop through each entry in the actorTypesList and register their sheet classes
   const actorTypesList = ActorTypes.getList({})
-  for (const [, value] of Object.entries(actorTypesList)) {
-    const { label, types, sheetClass } = value
+  for (const [id, value] of Object.entries(actorTypesList)) {
+    const { types, sheetClass, sheetModel } = value
 
-    foundry.documents.collections.Actors.registerSheet('wod5e', sheetClass, {
-      label,
+    // Add to the list of data models
+    Object.assign(CONFIG.Actor.dataModels, {
+      [id]: sheetModel
+    })
+
+    // Register the sheet with Foundry's DocumentSheetConfig
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, 'wod5e', sheetClass, {
       types,
       makeDefault: true
     })
   }
 
-  // Register item sheet application classes
   // Loop through each entry in the itemTypesList and register their sheet classes
   const itemTypesList = ItemTypes.getList({})
-  for (const [, value] of Object.entries(itemTypesList)) {
-    const { label, types, sheetClass } = value
+  for (const [id, value] of Object.entries(itemTypesList)) {
+    const { types, sheetClass, sheetModel } = value
 
-    foundry.documents.collections.Items.registerSheet('wod5e', sheetClass, {
-      label,
+    // Add to the list of data models
+    Object.assign(CONFIG.Item.dataModels, {
+      [id]: sheetModel
+    })
+
+    // Register the sheet with Foundry's DocumentSheetConfig
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, 'wod5e', sheetClass, {
       types,
       makeDefault: true
     })

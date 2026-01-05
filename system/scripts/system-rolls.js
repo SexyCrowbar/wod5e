@@ -132,6 +132,9 @@ class WOD5eDice {
     system = actor?.system?.gamesystem || 'mortal',
     originMessage = ''
   }) {
+    // Grab the dice-related data for the given system
+    const systemData = WOD5E.Systems.getList({})[system]
+
     // Inner roll function
     const _roll = async (inputBasicDice, inputAdvancedDice, formData) => {
       // Get the difficulty and store it
@@ -145,14 +148,18 @@ class WOD5eDice {
 
       // Prevent trying to roll 0 dice; all dice pools should roll at least 1 die
       if (parseInt(inputBasicDice) === 0 && parseInt(inputAdvancedDice) === 0) {
-        if (system === 'vampire' && actor.system.hunger.value > 0) {
-          // Vampires with hunger above 0 should be rolling 1 hunger die
-          inputAdvancedDice = 1
-        } else if (system === 'werewolf' && actor.system.rage.value > 0) {
-          // Werewolves with rage above 0 should be rolling 1 rage die
+        // Determine if the system uses a resource (like hunger or rage)
+        let resourceValue = 0
+        if (systemData?.usesResourceOnAdvancedDice && systemData?.resourceValuePath) {
+          // Extract resource value
+          resourceValue = foundry.utils.getProperty(actor.system, systemData.resourceValuePath) ?? 0
+        }
+
+        if (resourceValue > 0) {
+          // If system uses a resource and the value of that resource is greater than 0, roll 1 advanced die
           inputAdvancedDice = 1
         } else {
-          // In all other cases, we just roll one basic die
+          // Otherwise, roll 1 basic die
           inputBasicDice = 1
         }
       }
@@ -429,9 +436,6 @@ class WOD5eDice {
             el.addEventListener('change', function (event) {
               event.preventDefault()
 
-              // Actor data
-              const actorData = actor.system
-
               // Determine the input
               const modCheckbox = event.target
               const modifier = parseInt(event.currentTarget.dataset.value)
@@ -452,15 +456,12 @@ class WOD5eDice {
               if (!disableAdvancedDice) {
                 if (modifierIsNegative) {
                   // Apply dice to basicDice unless basicDice is 0
-                  if ((system === 'vampire' || system === 'werewolf') && basicValue === 0) {
+                  if (systemData.usesResourceOnAdvancedDice && basicValue === 0) {
                     applyDiceTo = 'advanced'
                   }
                 } else {
                   // Apply dice to advancedDice if advancedValue is below the actor's hunger/rage value
-                  if (
-                    (system === 'vampire' && advancedValue < actorData?.hunger.value) ||
-                    (system === 'werewolf' && advancedValue < actorData?.rage.value)
-                  ) {
+                  if (advancedValue < checkValue) {
                     applyDiceTo = 'advanced'
                   }
                 }
@@ -483,15 +484,16 @@ class WOD5eDice {
                   newValue = advancedValue + Math.abs(modifier)
 
                   // Determine what we're checking against
-                  if (system === 'vampire') {
-                    checkValue = actorData?.hunger.value
-                  }
-                  if (system === 'werewolf') {
-                    checkValue = actorData?.rage.value
+                  if (systemData?.usesResourceOnAdvancedDice && systemData?.resourceValuePath) {
+                    // Extract resource value
+                    checkValue = foundry.utils.getProperty(
+                      actor.system,
+                      systemData.resourceValuePath
+                    )
                   }
 
                   if (
-                    (newValue > actorData?.hunger.value || newValue > checkValue) &&
+                    newValue > checkValue &&
                     !(event.currentTarget.dataset.applyDiceTo === 'advanced')
                   ) {
                     // Check for any excess and apply it to basicDice
@@ -584,6 +586,9 @@ class WOD5eDice {
           _applyOblivionStains(actor, oblivionTriggers, rollMode)
         }
       }
+
+      // Send a hook
+      Hooks.callAll('wod5e.handleFailure', actor, system, failures, diceResults, rollMode)
     }
   }
 }

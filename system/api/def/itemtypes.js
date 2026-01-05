@@ -24,6 +24,27 @@ import { GiftItemSheet } from '../../item/wta/gift-item-sheet.js'
 import { AuspiceItemSheet } from '../../item/wta/auspice-sheet.js'
 import { TalismanItemSheet } from '../../item/wta/talisman-item-sheet.js'
 import { TribeItemSheet } from '../../item/wta/tribe-item-sheet.js'
+// Data models
+import { FeatureItemModel } from '../../item/data-models/shared/feature-item-model.js'
+import { CustomRollItemModel } from '../../item/data-models/shared/customRoll-item-model.js'
+import { ArmorItemModel } from '../../item/data-models/shared/armor-item-model.js'
+import { WeaponItemModel } from '../../item/data-models/shared/weapon-item-model.js'
+import { GearItemModel } from '../../item/data-models/shared/gear-item-model.js'
+import { TraitItemModel } from '../../item/data-models/shared/trait-item-model.js'
+import { ConditionItemModel } from '../../item/data-models/shared/condition-item-model.js'
+import { ClanItemModel } from '../../item/data-models/vtm/clan-item-model.js'
+import { PredatorTypeItemModel } from '../../item/data-models/vtm/predatorType-item-model.js'
+import { ResonanceItemModel } from '../../item/data-models/vtm/resonance-item-model.js'
+import { PowerItemModel } from '../../item/data-models/vtm/power-item-model.js'
+import { BoonItemModel } from '../../item/data-models/vtm/boon-item-model.js'
+import { CreedItemModel } from '../../item/data-models/htr/creed-item-model.js'
+import { DriveItemModel } from '../../item/data-models/htr/drive-item-model.js'
+import { PerkItemModel } from '../../item/data-models/htr/perk-item-model.js'
+import { EdgePoolItemModel } from '../../item/data-models/htr/edgepool-item-model.js'
+import { TribeItemModel } from '../../item/data-models/wta/tribe-item-model.js'
+import { AuspiceItemModel } from '../../item/data-models/wta/auspice-item-model.js'
+import { TalismanItemModel } from '../../item/data-models/wta/talisman-item-model.js'
+import { GiftItemModel } from '../../item/data-models/wta/gift-item-model.js'
 
 /*
  *   Each item type is defined through here; this includes the item's label,
@@ -46,7 +67,8 @@ export class ItemTypes extends BaseDefinitionClass {
     label: 'TYPES.Item.feature',
     img: 'systems/wod5e/assets/icons/items/feature.svg',
     types: ['feature'],
-    sheetClass: FeatureItemSheet
+    sheetClass: FeatureItemSheet,
+    sheetModel: FeatureItemModel
   }
 
   static customRoll = {
@@ -54,28 +76,32 @@ export class ItemTypes extends BaseDefinitionClass {
     img: 'systems/wod5e/assets/icons/items/custom-roll.png',
     types: ['customRoll'],
     sheetClass: CustomRollItemSheet,
-    excludedActorTypes: ['group', 'spc']
+    excludedActorTypes: ['group', 'spc'],
+    sheetModel: CustomRollItemModel
   }
 
   static armor = {
     label: 'TYPES.Item.armor',
     img: '',
     types: ['armor'],
-    sheetClass: ArmorItemSheet
+    sheetClass: ArmorItemSheet,
+    sheetModel: ArmorItemModel
   }
 
   static weapon = {
     label: 'TYPES.Item.weapon',
     img: '',
     types: ['weapon'],
-    sheetClass: WeaponItemSheet
+    sheetClass: WeaponItemSheet,
+    sheetModel: WeaponItemModel
   }
 
   static gear = {
     label: 'TYPES.Item.gear',
     img: '',
     types: ['gear'],
-    sheetClass: GearItemSheet
+    sheetClass: GearItemSheet,
+    sheetModel: GearItemModel
   }
 
   static trait = {
@@ -83,7 +109,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: '',
     types: ['trait'],
     sheetClass: TraitItemSheet,
-    restrictedActorTypes: ['spc']
+    restrictedActorTypes: ['spc'],
+    sheetModel: TraitItemModel
   }
 
   static condition = {
@@ -92,7 +119,8 @@ export class ItemTypes extends BaseDefinitionClass {
     types: ['condition'],
     sheetClass: ConditionItemSheet,
     restrictedActorTypes: [],
-    excludedActorTypes: ['group']
+    excludedActorTypes: ['group'],
+    sheetModel: ConditionItemModel
   }
 
   // Vampire Items
@@ -103,7 +131,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: ClanItemSheet,
     restrictedActorTypes: ['vampire'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: ClanItemModel
   }
 
   static predatorType = {
@@ -113,7 +142,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: PredatorTypeItemSheet,
     restrictedActorTypes: ['vampire'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: PredatorTypeItemModel
   }
 
   static resonance = {
@@ -123,7 +153,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: ResonanceItemSheet,
     restrictedActorTypes: ['vampire'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: ResonanceItemModel
   }
 
   static power = {
@@ -131,7 +162,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: 'systems/wod5e/assets/icons/items/discipline.png',
     types: ['power'],
     sheetClass: DisciplineItemSheet,
-    restrictedActorTypes: ['vampire', 'ghoul']
+    restrictedActorTypes: ['vampire', 'ghoul'],
+    sheetModel: PowerItemModel
   }
 
   static boon = {
@@ -139,7 +171,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: 'systems/wod5e/assets/icons/items/boon.svg',
     types: ['boon'],
     sheetClass: BoonItemSheet,
-    restrictedActorTypes: ['vampire', 'ghoul', 'coterie']
+    restrictedActorTypes: ['vampire', 'ghoul', 'coterie'],
+    sheetModel: BoonItemModel
   }
 
   // Hunter Items
@@ -150,7 +183,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: CreedItemSheet,
     restrictedActorTypes: ['hunter'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: CreedItemModel
   }
 
   static drive = {
@@ -160,7 +194,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: DriveItemSheet,
     restrictedActorTypes: ['hunter'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: DriveItemModel
   }
 
   static perk = {
@@ -168,7 +203,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: 'systems/wod5e/assets/icons/items/edge.png',
     types: ['perk'],
     sheetClass: PerkItemSheet,
-    restrictedActorTypes: ['hunter']
+    restrictedActorTypes: ['hunter'],
+    sheetModel: PerkItemModel
   }
 
   static edgepool = {
@@ -177,7 +213,8 @@ export class ItemTypes extends BaseDefinitionClass {
     types: ['edgepool'],
     sheetClass: EdgePoolItemSheet,
     restrictedActorTypes: ['hunter'],
-    excludedActorTypes: ['spc']
+    excludedActorTypes: ['spc'],
+    sheetModel: EdgePoolItemModel
   }
 
   // Werewolf Items
@@ -188,7 +225,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: TribeItemSheet,
     restrictedActorTypes: ['werewolf'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: TribeItemModel
   }
 
   static auspice = {
@@ -198,7 +236,8 @@ export class ItemTypes extends BaseDefinitionClass {
     sheetClass: AuspiceItemSheet,
     restrictedActorTypes: ['werewolf'],
     excludedActorTypes: ['spc'],
-    limitOnePerActor: true
+    limitOnePerActor: true,
+    sheetModel: AuspiceItemModel
   }
 
   static talisman = {
@@ -206,7 +245,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: '',
     types: ['talisman'],
     sheetClass: TalismanItemSheet,
-    restrictedActorTypes: ['werewolf', 'pack']
+    restrictedActorTypes: ['werewolf', 'pack'],
+    sheetModel: TalismanItemModel
   }
 
   static gift = {
@@ -214,7 +254,8 @@ export class ItemTypes extends BaseDefinitionClass {
     img: 'systems/wod5e/assets/icons/items/gift.png',
     types: ['gift'],
     sheetClass: GiftItemSheet,
-    restrictedActorTypes: ['werewolf', 'spirit']
+    restrictedActorTypes: ['werewolf', 'spirit'],
+    sheetModel: GiftItemModel
   }
 }
 
