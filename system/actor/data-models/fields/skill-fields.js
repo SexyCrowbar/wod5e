@@ -35,6 +35,7 @@ export function skillFields() {
 function createSkillSchema() {
   return new fields.SchemaField({
     value: new fields.NumberField({ initial: 0 }),
-    active: new fields.BooleanField({ initial: false })
+    active: new fields.BooleanField({ initial: false }),
+    bonuses: new fields.ArrayField(new fields.ObjectField())
   })
 }
