@@ -452,6 +452,14 @@ class WOD5eDice {
               // Either use the current applyDiceTo (if set), or default to 'basic'
               let applyDiceTo = event.currentTarget.dataset.applyDiceTo || 'basic'
 
+              // Determine the new input depending on if the modifier is adding or subtracting
+              // Checked and modifier is NOT negative = Add
+              // Unchecked and modifier is negative = Add
+              // Checked and modifier is negative = Subtract
+              // Unchecked and modifier is NOT negative = Subtract
+              let newValue = 0
+              let checkValue = 0
+
               // Make sure advanced dice are enabled
               if (!disableAdvancedDice) {
                 if (modifierIsNegative) {
@@ -467,13 +475,6 @@ class WOD5eDice {
                 }
               }
 
-              // Determine the new input depending on if the modifier is adding or subtracting
-              // Checked and modifier is NOT negative = Add
-              // Unchecked and modifier is negative = Add
-              // Checked and modifier is negative = Subtract
-              // Unchecked and modifier is NOT negative = Subtract
-              let newValue = 0
-              let checkValue = 0
               if (
                 (modCheckbox?.checked && !modifierIsNegative) ||
                 (!modCheckbox?.checked && modifierIsNegative)
