@@ -1,41 +1,33 @@
 const fields = foundry.data.fields
 
+// Main export, a TypedObjectField with the Skill Field's data model
 export function skillFields() {
-  return {
-    athletics: createSkillSchema(),
-    animalken: createSkillSchema(),
-    academics: createSkillSchema(),
-    brawl: createSkillSchema(),
-    etiquette: createSkillSchema(),
-    awareness: createSkillSchema(),
-    craft: createSkillSchema(),
-    insight: createSkillSchema(),
-    finance: createSkillSchema(),
-    drive: createSkillSchema(),
-    intimidation: createSkillSchema(),
-    investigation: createSkillSchema(),
-    firearms: createSkillSchema(),
-    leadership: createSkillSchema(),
-    medicine: createSkillSchema(),
-    larceny: createSkillSchema(),
-    performance: createSkillSchema(),
-    occult: createSkillSchema(),
-    melee: createSkillSchema(),
-    persuasion: createSkillSchema(),
-    politics: createSkillSchema(),
-    stealth: createSkillSchema(),
-    streetwise: createSkillSchema(),
-    science: createSkillSchema(),
-    survival: createSkillSchema(),
-    subterfuge: createSkillSchema(),
-    technology: createSkillSchema()
-  }
+  return new fields.TypedObjectField(skillValueField())
 }
 
-function createSkillSchema() {
+function skillValueField() {
   return new fields.SchemaField({
     value: new fields.NumberField({ initial: 0 }),
     active: new fields.BooleanField({ initial: false }),
-    bonuses: new fields.ArrayField(new fields.ObjectField())
+    bonuses: new fields.ArrayField(new fields.SchemaField({}))
   })
+}
+
+// Register all initial skill fields and values of them
+export function createInitialSkills() {
+  const skills = {}
+
+  for (const key of Object.keys(WOD5E.Skills.getList({}))) {
+    skills[key] = createInitialSkillValue()
+  }
+
+  return skills
+}
+
+export function createInitialSkillValue() {
+  return {
+    value: 0,
+    active: false,
+    bonuses: []
+  }
 }

@@ -79,10 +79,10 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     })
 
     // Attribute fields
-    schema.attributes = new fields.SchemaField(attributeFields())
+    schema.attributes = attributeFields()
 
     // Skill fields
-    schema.skills = new fields.SchemaField(skillFields())
+    schema.skills = skillFields()
 
     // Setting fields
     Object.assign(schema, settingFields())
