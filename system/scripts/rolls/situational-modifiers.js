@@ -51,8 +51,8 @@ export async function getSituationalModifiers({ actor, selectors }) {
         // Check for matching modifiers, or 'all'
         const matchingModifiers = obj.bonuses.filter(
           (modifier) =>
-            selectors.some((selector) => modifier.paths.includes(selector)) ||
-            modifier.paths.includes('all')
+            selectors.some((selector) => modifier?.paths?.includes(selector)) ||
+            modifier?.paths?.includes('all')
         )
 
         // If there are any matching modifiers, push it to the modifiers list
