@@ -7,7 +7,8 @@
     "eslint": "eslint -c .github/linters/.eslintrc.yml *",
     "convert-conditions": "fvtt package unpack -n Conditions --inputDirectory ./packs/ --outputDirectory ./packs/unpacked/_conditions && fvtt package pack -n Conditions --inputDirectory ./packs/unpacked/_conditions --outputDirectory ./packs --nedb",
     "convert-macros": "fvtt package unpack -n Macros --inputDirectory ./packs/ --outputDirectory ./packs/unpacked/_macros && fvtt package pack -n Macros --inputDirectory ./packs/unpacked/_macros --outputDirectory ./packs --nedb",
-    "convert-packs": "npm run convert-conditions && npm run convert-macros"
+    "convert-packs": "npm run convert-conditions && npm run convert-macros",
+    "generate-release": "node system/scripts/generate-release-zip.js"
   },
   "browserslist": [
     "last 3 versions"
@@ -47,6 +48,7 @@
   "homepage": "https://github.com/WoD5E-Developers/wod5e#readme",
   "dependencies": {
     "@eslint/compat": "^1.4.1",
+    "archiver": "^7.0.1",
     "eslint-plugin-prettier": "^5.5.4"
   }
 }
