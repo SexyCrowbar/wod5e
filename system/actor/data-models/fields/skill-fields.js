@@ -9,6 +9,8 @@ function skillValueField() {
   return new fields.SchemaField({
     value: new fields.NumberField({ initial: 0 }),
     active: new fields.BooleanField({ initial: false }),
+    description: new fields.HTMLField({ initial: '' }),
+    macroid: new fields.StringField({ initial: '' }),
     bonuses: new fields.ArrayField(new fields.ObjectField())
   })
 }
@@ -28,6 +30,8 @@ export function createInitialSkillValue() {
   return {
     value: 0,
     active: false,
+    description: '',
+    macroid: '',
     bonuses: []
   }
 }
