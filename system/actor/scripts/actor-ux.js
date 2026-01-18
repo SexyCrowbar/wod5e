@@ -1,3 +1,6 @@
+import { ItemTypes } from '../../api/def/itemtypes.js'
+import { _onSortItem } from './on-sort-item.js'
+
 export class ActorUX {
   // Save the current scroll position
   static async _saveScrollPositions(actor) {
@@ -65,5 +68,75 @@ export class ActorUX {
           contentElement.css('transition', '')
         }
       })
+  }
+
+  static async _onDropItem(event, actor, data) {
+    if (!actor.isOwner) return false
+    const actorType = actor.type
+    const item = await Item.implementation.fromDropData(data)
+    const itemData = item.toObject()
+    const itemType = itemData.type
+    const itemsList = ItemTypes.getList({})
+
+    // Check whether we should allow this item type to be placed on this actor type
+    if (itemsList[itemType]) {
+      const whitelist = itemsList[itemType].restrictedActorTypes
+      const blacklist = itemsList[itemType].excludedActorTypes
+
+      // If the whitelist contains any entries, we can check to make sure this actor type is allowed for the item
+      // We go through the base actor type, then subtypes - if we match to any of them, we allow the item to be
+      // added to the actor.
+      // We don't need to add this logic to the blacklist because the blacklist only needs to check against the base types.
+      if (
+        !foundry.utils.isEmpty(whitelist) &&
+        // This is just a general check against the base actorType
+        !whitelist.includes(actorType) &&
+        // If the actor is an SPC, check against the spcType
+        !(actorType === 'spc' && whitelist.includes(actor.system.spcType)) &&
+        // If the actor is a Group sheet, check against the groupType
+        !(actorType === 'group' && whitelist.includes(actor.system.groupType))
+      ) {
+        ui.notifications.warn(
+          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
+            string1: itemType,
+            string2: actorType
+          })
+        )
+
+        return false
+      }
+
+      // If the blacklist contains any entries, we can check to make sure this actor type isn't disallowed for the item
+      if (!foundry.utils.isEmpty(blacklist) && blacklist.indexOf(actorType) > -1) {
+        ui.notifications.warn(
+          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
+            string1: itemType,
+            string2: actorType
+          })
+        )
+
+        return false
+      }
+
+      // Handle limiting only a single type of an item to an actor
+      if (itemsList[itemType].limitOnePerActor) {
+        // Delete all other types of this item on the actor
+        const duplicateItemTypeInstances = actor.items
+          .filter((item) => item.type === itemType)
+          .map((item) => item.id)
+        actor.deleteEmbeddedDocuments('Item', duplicateItemTypeInstances)
+      }
+    }
+
+    // Handle item sorting within the same Actor
+    if (actor.uuid === item.parent?.uuid) return _onSortItem(event, actor, itemData)
+
+    // Create the owned item
+    return this._onDropItemCreate(actor, itemData)
+  }
+
+  static async _onDropItemCreate(actor, itemData) {
+    itemData = itemData instanceof Array ? itemData : [itemData]
+    return actor.createEmbeddedDocuments('Item', itemData)
   }
 }

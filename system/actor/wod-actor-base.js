@@ -2,8 +2,8 @@
 import { getActorHeader } from './scripts/get-actor-header.js'
 import { getActorBackground } from './scripts/get-actor-background.js'
 import { getActorTypes } from './scripts/get-actor-types.js'
-// Definition file
-import { ItemTypes } from '../api/def/itemtypes.js'
+// Actor UX functions
+import { ActorUX } from './scripts/actor-ux.js'
 // Roll function
 import { _onRoll } from './scripts/roll.js'
 // Resource functions
@@ -38,8 +38,6 @@ import {
   prepareSpcStatsContext,
   prepareStatsContext
 } from './scripts/prepare-partials.js'
-import { ActorUX } from './scripts/actor-ux.js'
-import { _onSortItem } from './scripts/on-sort-item.js'
 // Mixin
 const { HandlebarsApplicationMixin } = foundry.applications.api
 
@@ -497,79 +495,8 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
     // Handle different data types
     switch (data.type) {
       case 'Item':
-        return this._onDropItem(event, data)
+        return ActorUX._onDropItem(event, this.actor, data)
     }
-  }
-
-  async _onDropItem(event, data) {
-    if (!this.actor.isOwner) return false
-    const actorType = this.actor.type
-    const item = await Item.implementation.fromDropData(data)
-    const itemData = item.toObject()
-    const itemType = itemData.type
-    const itemsList = ItemTypes.getList({})
-
-    // Check whether we should allow this item type to be placed on this actor type
-    if (itemsList[itemType]) {
-      const whitelist = itemsList[itemType].restrictedActorTypes
-      const blacklist = itemsList[itemType].excludedActorTypes
-
-      // If the whitelist contains any entries, we can check to make sure this actor type is allowed for the item
-      // We go through the base actor type, then subtypes - if we match to any of them, we allow the item to be
-      // added to the actor.
-      //
-      // We don't need to add this logic to the blacklist because the blacklist only needs to check against the base types.
-      if (
-        !foundry.utils.isEmpty(whitelist) &&
-        // This is just a general check against the base actorType
-        !whitelist.includes(actorType) &&
-        // If the actor is an SPC, check against the spcType
-        !(actorType === 'spc' && whitelist.includes(this.actor.system.spcType)) &&
-        // If the actor is a Group sheet, check against the groupType
-        !(actorType === 'group' && whitelist.includes(this.actor.system.groupType))
-      ) {
-        ui.notifications.warn(
-          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
-            string1: itemType,
-            string2: actorType
-          })
-        )
-
-        return false
-      }
-
-      // If the blacklist contains any entries, we can check to make sure this actor type isn't disallowed for the item
-      if (!foundry.utils.isEmpty(blacklist) && blacklist.indexOf(actorType) > -1) {
-        ui.notifications.warn(
-          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
-            string1: itemType,
-            string2: actorType
-          })
-        )
-
-        return false
-      }
-
-      // Handle limiting only a single type of an item to an actor
-      if (itemsList[itemType].limitOnePerActor) {
-        // Delete all other types of this item on the actor
-        const duplicateItemTypeInstances = this.actor.items
-          .filter((item) => item.type === itemType)
-          .map((item) => item.id)
-        this.actor.deleteEmbeddedDocuments('Item', duplicateItemTypeInstances)
-      }
-    }
-
-    // Handle item sorting within the same Actor
-    if (this.actor.uuid === item.parent?.uuid) return _onSortItem(event, this.actor, itemData)
-
-    // Create the owned item
-    return this._onDropItemCreate(itemData, event)
-  }
-
-  async _onDropItemCreate(itemData) {
-    itemData = itemData instanceof Array ? itemData : [itemData]
-    return this.actor.createEmbeddedDocuments('Item', itemData)
   }
 
   prepareStatsContext(context, actor) {
