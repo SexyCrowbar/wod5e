@@ -47,14 +47,16 @@
                                     {{/if}}
                                 </div>
                                 <div class="item-controls">
-                                    <!-- Icon to roll the item if a dicepool is available -->
-                                    {{#if item.system.dicepool}}
-                                        {{#if (isNotEmpty item.system.dicepool)}}
-                                            <a class="item-image rollable-item" data-action="rollItem" data-item-uuid="{{item.uuid}}">
-                                                <i class="fa-solid fa-dice-d10"></i>
-                                            </a>
+                                    <!-- Icon to roll the item if a dicepool is available and the actor is not a group sheet -->
+                                    {{#ifnoteq ../../baseActorType 'group'}}
+                                        {{#if item.system.dicepool}}
+                                            {{#if (isNotEmpty item.system.dicepool)}}
+                                                <a class="item-image rollable-item" data-action="rollItem" data-item-uuid="{{item.uuid}}">
+                                                    <i class="fa-solid fa-dice-d10"></i>
+                                                </a>
+                                            {{/if}}
                                         {{/if}}
-                                    {{/if}}
+                                    {{/ifnoteq}}
                                     {{#if item.system.uses.enabled}}
                                         <!-- Icon to consume a use of the feature -->
                                         <a class="item-control item-use" data-action="expendItemUse" data-item-id="{{item._id}}" title="{{localize 'WOD5E.ItemsList.ExpendUse'}}">

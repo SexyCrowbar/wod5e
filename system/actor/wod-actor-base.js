@@ -440,6 +440,7 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
     // Drag and drop functionality
     this.#dragDrop.forEach((d) => d.bind(this.element))
 
+    // Keep scroll positions from resetting on sheet update
     this._restoreScrollPositions()
     this._restoreCollapsibleStates()
   }
