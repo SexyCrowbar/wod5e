@@ -28,6 +28,7 @@ import { _onCreateItem, _onItemChat, _onItemEdit, _onItemDelete } from './script
 import { _onToggleCollapse } from './scripts/on-toggle-collapse.js'
 import { _addActor, _openActorSheet, _removeActor } from './scripts/group-members.js'
 import { ActorUX } from './scripts/actor-ux.js'
+import { _onSortItem } from './scripts/on-sort-item.js'
 // Mixin
 const { HandlebarsApplicationMixin } = foundry.applications.api
 
@@ -574,7 +575,7 @@ export class GroupActorSheet extends HandlebarsApplicationMixin(
     }
 
     // Handle item sorting within the same Actor
-    if (this.actor.uuid === item.parent?.uuid) return this._onSortItem(event, itemData)
+    if (this.actor.uuid === item.parent?.uuid) return _onSortItem(event, this.actor, itemData)
 
     // Create the owned item
     return this._onDropItemCreate(itemData, event)
@@ -583,40 +584,6 @@ export class GroupActorSheet extends HandlebarsApplicationMixin(
   async _onDropItemCreate(itemData) {
     itemData = itemData instanceof Array ? itemData : [itemData]
     return this.actor.createEmbeddedDocuments('Item', itemData)
-  }
-
-  _onSortItem(event, itemData) {
-    // Get the drag source and drop target
-    const items = this.actor.items
-    const source = items.get(itemData._id)
-    const dropTarget = event.target.closest('[data-item-id]')
-    if (!dropTarget) return
-    const target = items.get(dropTarget.dataset.itemId)
-
-    // Don't sort on yourself
-    if (source.id === target.id) return
-
-    // Identify sibling items based on adjacent HTML elements
-    const siblings = []
-    for (const el of dropTarget.parentElement.children) {
-      const siblingId = el.dataset.itemId
-      if (siblingId && siblingId !== source.id) siblings.push(items.get(el.dataset.itemId))
-    }
-
-    // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(source, {
-      target,
-      siblings
-    })
-
-    const updateData = sortUpdates.map((u) => {
-      const update = u.update
-      update._id = u.target._id
-      return update
-    })
-
-    // Perform the update
-    return this.actor.updateEmbeddedDocuments('Item', updateData)
   }
 }
 
