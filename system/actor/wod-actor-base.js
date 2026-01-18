@@ -2,8 +2,8 @@
 import { getActorHeader } from './scripts/get-actor-header.js'
 import { getActorBackground } from './scripts/get-actor-background.js'
 import { getActorTypes } from './scripts/get-actor-types.js'
-// Definition file
-import { ItemTypes } from '../api/def/itemtypes.js'
+// Actor UX functions
+import { ActorUX } from './scripts/actor-ux.js'
 // Roll function
 import { _onRoll } from './scripts/roll.js'
 // Resource functions
@@ -374,8 +374,8 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
   }
 
   _preRender() {
-    this._saveScrollPositions()
-    this._saveCollapsibleStates()
+    ActorUX._saveScrollPositions(this)
+    ActorUX._saveCollapsibleStates(this)
   }
 
   async _onRender() {
@@ -440,8 +440,9 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
     // Drag and drop functionality
     this.#dragDrop.forEach((d) => d.bind(this.element))
 
-    this._restoreScrollPositions()
-    this._restoreCollapsibleStates()
+    // Keep scroll positions from resetting on sheet update
+    ActorUX._restoreScrollPositions(this)
+    ActorUX._restoreCollapsibleStates(this)
   }
 
   #createDragDropHandlers() {
@@ -494,181 +495,8 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
     // Handle different data types
     switch (data.type) {
       case 'Item':
-        return this._onDropItem(event, data)
+        return ActorUX._onDropItem(event, this.actor, data)
     }
-  }
-
-  async _onDropItem(event, data) {
-    if (!this.actor.isOwner) return false
-    const actorType = this.actor.type
-    const item = await Item.implementation.fromDropData(data)
-    const itemData = item.toObject()
-    const itemType = itemData.type
-    const itemsList = ItemTypes.getList({})
-
-    // Check whether we should allow this item type to be placed on this actor type
-    if (itemsList[itemType]) {
-      const whitelist = itemsList[itemType].restrictedActorTypes
-      const blacklist = itemsList[itemType].excludedActorTypes
-
-      // If the whitelist contains any entries, we can check to make sure this actor type is allowed for the item
-      // We go through the base actor type, then subtypes - if we match to any of them, we allow the item to be
-      // added to the actor.
-      //
-      // We don't need to add this logic to the blacklist because the blacklist only needs to check against the base types.
-      if (
-        !foundry.utils.isEmpty(whitelist) &&
-        // This is just a general check against the base actorType
-        !whitelist.includes(actorType) &&
-        // If the actor is an SPC, check against the spcType
-        !(actorType === 'spc' && whitelist.includes(this.actor.system.spcType)) &&
-        // If the actor is a Group sheet, check against the groupType
-        !(actorType === 'group' && whitelist.includes(this.actor.system.groupType))
-      ) {
-        ui.notifications.warn(
-          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
-            string1: itemType,
-            string2: actorType
-          })
-        )
-
-        return false
-      }
-
-      // If the blacklist contains any entries, we can check to make sure this actor type isn't disallowed for the item
-      if (!foundry.utils.isEmpty(blacklist) && blacklist.indexOf(actorType) > -1) {
-        ui.notifications.warn(
-          game.i18n.format('WOD5E.ItemsList.ItemCannotBeDroppedOnActor', {
-            string1: itemType,
-            string2: actorType
-          })
-        )
-
-        return false
-      }
-
-      // Handle limiting only a single type of an item to an actor
-      if (itemsList[itemType].limitOnePerActor) {
-        // Delete all other types of this item on the actor
-        const duplicateItemTypeInstances = this.actor.items
-          .filter((item) => item.type === itemType)
-          .map((item) => item.id)
-        this.actor.deleteEmbeddedDocuments('Item', duplicateItemTypeInstances)
-      }
-    }
-
-    // Handle item sorting within the same Actor
-    if (this.actor.uuid === item.parent?.uuid) return this._onSortItem(event, itemData)
-
-    // Create the owned item
-    return this._onDropItemCreate(itemData, event)
-  }
-
-  async _onDropItemCreate(itemData) {
-    itemData = itemData instanceof Array ? itemData : [itemData]
-    return this.actor.createEmbeddedDocuments('Item', itemData)
-  }
-
-  _onSortItem(event, itemData) {
-    // Get the drag source and drop target
-    const items = this.actor.items
-    const source = items.get(itemData._id)
-    const dropTarget = event.target.closest('[data-item-id]')
-    if (!dropTarget) return
-    const target = items.get(dropTarget.dataset.itemId)
-
-    // Don't sort on yourself
-    if (source.id === target.id) return
-
-    // Identify sibling items based on adjacent HTML elements
-    const siblings = []
-    for (const el of dropTarget.parentElement.children) {
-      const siblingId = el.dataset.itemId
-      if (siblingId && siblingId !== source.id) siblings.push(items.get(el.dataset.itemId))
-    }
-
-    // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(source, {
-      target,
-      siblings
-    })
-
-    const updateData = sortUpdates.map((u) => {
-      const update = u.update
-      update._id = u.target._id
-      return update
-    })
-
-    // Perform the update
-    return this.actor.updateEmbeddedDocuments('Item', updateData)
-  }
-
-  // Save the current scroll position
-  async _saveScrollPositions() {
-    const activeList = this.findActiveList()
-
-    if (activeList.length) {
-      this._scroll = activeList.scrollTop()
-    }
-  }
-
-  // Restore the saved scroll position
-  async _restoreScrollPositions() {
-    const activeList = this.findActiveList()
-
-    if (activeList.length && this._scroll != null) {
-      activeList.scrollTop(this._scroll)
-    }
-  }
-
-  // Get the scroll area of the currently active tab
-  findActiveList() {
-    const activeList = $(this.element).find('section.tab.active')
-
-    return activeList
-  }
-
-  // Save the maxHeight of all collapsible-content elements if it's greater than 0
-  async _saveCollapsibleStates() {
-    // Clear out the old states
-    this._collapsibleStates.clear()
-
-    // Iterate through each collapsible element in the page
-    $(this.element)
-      .find('.collapsible-content')
-      .each((index, content) => {
-        const contentElement = $(content)
-        const maxHeight = parseFloat(contentElement.css('maxHeight'))
-
-        // Check if max height is greater than 0, and if it is, we save its maxHeight state
-        if (maxHeight > 0) {
-          this._collapsibleStates.set(contentElement.attr('data-id') || index, maxHeight)
-        }
-      })
-  }
-
-  // Restore the maxHeight of previously expanded collapsible-content elements
-  async _restoreCollapsibleStates() {
-    $(this.element)
-      .find('.collapsible-content')
-      .each((index, content) => {
-        const contentElement = $(content)
-        const key = contentElement.attr('data-id') || index // Match with saved state
-
-        if (this._collapsibleStates.has(key)) {
-          // Disable the transition property before re-setting the max height
-          // This makes it so that on re-render, the user doesn't watch the
-          // collapse animation again
-          contentElement.css('transition', 'none')
-          $(content).css('maxHeight', `${this._collapsibleStates.get(key)}px`)
-
-          // Force a reflow and then re-enable the transition property
-          // We have to tell eslint to ignore the no-void rule because it's genuinely useful here
-
-          void contentElement[0].offsetHeight
-          contentElement.css('transition', '')
-        }
-      })
   }
 
   prepareStatsContext(context, actor) {

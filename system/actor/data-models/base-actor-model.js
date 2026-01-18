@@ -37,6 +37,7 @@ export class WoDActorModel extends foundry.abstract.TypeDataModel {
     schema.headers = new fields.SchemaField({
       concept: new fields.StringField({ initial: '' }),
       chronicle: new fields.StringField({ initial: '' }),
+      ambition: new fields.StringField({ initial: '' }),
       desire: new fields.StringField({ initial: '' }),
       touchstones: new fields.HTMLField({ initial: '' }),
       tenets: new fields.HTMLField({ initial: '' }),

@@ -2597,11 +2597,11 @@ body.uk .actor.sheet {
   --actor-background-default: url("../assets/actor/actor_background.webp");
   --actor-header-default: url("../assets/ui/Actor_Header_Background.webp");
 }
-.window-content {
+.wod5e {
   box-shadow: 0 0 5px var(--system-color-1);
 }
-.window-content .actor-header,
-.window-content .tab {
+.wod5e .actor-header,
+.wod5e .tab {
   color: var(--system-color-5);
   --input-text-color: var(--system-color-5);
 }
@@ -2813,13 +2813,6 @@ prose-mirror .editor-menu button {
   border-bottom: 2px groove #CCC;
   background: var(--system-color-11);
 }
-.settings-sidebar #game-details,
-.settings-sidebar #settings-game,
-.settings-sidebar #settings-documentation,
-.settings-sidebar #settings-access,
-.settings-sidebar #license-information {
-  background: #000000a6;
-}
 /* Roll Dialogs */
 .dialog-content .dice-group-header {
   color: var(--system-color-4);
@@ -2994,6 +2987,9 @@ prose-mirror .editor-menu button {
   --system-dark-color-8: #e6e6e6;
   --dark-theme-filter: rgba(43, 43, 43, 0.5);
   --actor-background-dark: url(/systems/wod5e/assets/actor/actor_background_dark.webp);
+}
+#interface.theme-dark #license-information {
+  background: #000000a6;
 }
 .theme-dark {
   /* All places that use a filter to apply the theme colour */
