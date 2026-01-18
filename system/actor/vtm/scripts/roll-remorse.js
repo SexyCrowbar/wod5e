@@ -1,3 +1,4 @@
+import { getActiveModifiers } from '../../../scripts/rolls/situational-modifiers.js'
 import { WOD5eDice } from '../../../scripts/system-rolls.js'
 
 /** Handle rolling a remorse check */
@@ -9,16 +10,24 @@ export const _onRemorseRoll = async function (event) {
 
   // Secondary variables
   const humanity = actor.system.humanity.value
-  const stain = actor.system.humanity.stains
-  const dicePool = Math.max(10 - humanity - stain, 1)
+  const stains = actor.system.humanity.stains
+  const selectors = ['humanity']
+
+  // Handle getting any situational modifiers
+  const activeModifiers = await getActiveModifiers({
+    actor,
+    selectors
+  })
+  // Dicepool is 10, minus humanity, minus any stains the actor has, and then apply active modifiers.
+  // Minimum of 1 dice on a Remorse roll
+  const dicePool = Math.max(10 - humanity - stains + activeModifiers.totalValue, 1)
 
   WOD5eDice.Roll({
     basicDice: dicePool,
     title: game.i18n.localize('WOD5E.VTM.RollingRemorse'),
-    selectors: ['humanity'],
+    selectors,
     actor,
     data: actor.system,
-    quickRoll: true,
     disableAdvancedDice: true,
     callback: async (err, rollData) => {
       if (err) console.log('World of Darkness 5e | ' + err)

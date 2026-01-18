@@ -544,8 +544,8 @@ class WOD5eDice {
               }
 
               // Ensure that there can't be negative dice
-              if (basicDiceInput.value < 0) basicDiceInput.value = 0
-              if (advancedDiceInput.value < 0) advancedDiceInput.value = 0
+              if (basicDiceInput && basicDiceInput.value < 0) basicDiceInput.value = 0
+              if (advancedDiceInput && advancedDiceInput.value < 0) advancedDiceInput.value = 0
             })
           })
         }
