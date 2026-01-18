@@ -38,6 +38,7 @@ import {
   prepareSpcStatsContext,
   prepareStatsContext
 } from './scripts/prepare-partials.js'
+import { ActorUX } from './scripts/actor-ux.js'
 // Mixin
 const { HandlebarsApplicationMixin } = foundry.applications.api
 
@@ -374,8 +375,8 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
   }
 
   _preRender() {
-    this._saveScrollPositions()
-    this._saveCollapsibleStates()
+    ActorUX._saveScrollPositions(this)
+    ActorUX._saveCollapsibleStates(this)
   }
 
   async _onRender() {
@@ -441,8 +442,8 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
     this.#dragDrop.forEach((d) => d.bind(this.element))
 
     // Keep scroll positions from resetting on sheet update
-    this._restoreScrollPositions()
-    this._restoreCollapsibleStates()
+    ActorUX._restoreScrollPositions(this)
+    ActorUX._restoreCollapsibleStates(this)
   }
 
   #createDragDropHandlers() {
@@ -602,74 +603,6 @@ export class WoDActorBase extends HandlebarsApplicationMixin(
 
     // Perform the update
     return this.actor.updateEmbeddedDocuments('Item', updateData)
-  }
-
-  // Save the current scroll position
-  async _saveScrollPositions() {
-    const activeList = this.findActiveList()
-
-    if (activeList.length) {
-      this._scroll = activeList.scrollTop()
-    }
-  }
-
-  // Restore the saved scroll position
-  async _restoreScrollPositions() {
-    const activeList = this.findActiveList()
-
-    if (activeList.length && this._scroll != null) {
-      activeList.scrollTop(this._scroll)
-    }
-  }
-
-  // Get the scroll area of the currently active tab
-  findActiveList() {
-    const activeList = $(this.element).find('section.tab.active')
-
-    return activeList
-  }
-
-  // Save the maxHeight of all collapsible-content elements if it's greater than 0
-  async _saveCollapsibleStates() {
-    // Clear out the old states
-    this._collapsibleStates.clear()
-
-    // Iterate through each collapsible element in the page
-    $(this.element)
-      .find('.collapsible-content')
-      .each((index, content) => {
-        const contentElement = $(content)
-        const maxHeight = parseFloat(contentElement.css('maxHeight'))
-
-        // Check if max height is greater than 0, and if it is, we save its maxHeight state
-        if (maxHeight > 0) {
-          this._collapsibleStates.set(contentElement.attr('data-id') || index, maxHeight)
-        }
-      })
-  }
-
-  // Restore the maxHeight of previously expanded collapsible-content elements
-  async _restoreCollapsibleStates() {
-    $(this.element)
-      .find('.collapsible-content')
-      .each((index, content) => {
-        const contentElement = $(content)
-        const key = contentElement.attr('data-id') || index // Match with saved state
-
-        if (this._collapsibleStates.has(key)) {
-          // Disable the transition property before re-setting the max height
-          // This makes it so that on re-render, the user doesn't watch the
-          // collapse animation again
-          contentElement.css('transition', 'none')
-          $(content).css('maxHeight', `${this._collapsibleStates.get(key)}px`)
-
-          // Force a reflow and then re-enable the transition property
-          // We have to tell eslint to ignore the no-void rule because it's genuinely useful here
-
-          void contentElement[0].offsetHeight
-          contentElement.css('transition', '')
-        }
-      })
   }
 
   prepareStatsContext(context, actor) {
