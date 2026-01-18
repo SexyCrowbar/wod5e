@@ -2813,13 +2813,6 @@ prose-mirror .editor-menu button {
   border-bottom: 2px groove #CCC;
   background: var(--system-color-11);
 }
-.settings-sidebar #game-details,
-.settings-sidebar #settings-game,
-.settings-sidebar #settings-documentation,
-.settings-sidebar #settings-access,
-.settings-sidebar #license-information {
-  background: #000000a6;
-}
 /* Roll Dialogs */
 .dialog-content .dice-group-header {
   color: var(--system-color-4);
@@ -2994,6 +2987,9 @@ prose-mirror .editor-menu button {
   --system-dark-color-8: #e6e6e6;
   --dark-theme-filter: rgba(43, 43, 43, 0.5);
   --actor-background-dark: url(/systems/wod5e/assets/actor/actor_background_dark.webp);
+}
+#interface.theme-dark #license-information {
+  background: #000000a6;
 }
 .theme-dark {
   /* All places that use a filter to apply the theme colour */
