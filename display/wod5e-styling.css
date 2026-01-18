@@ -2597,11 +2597,11 @@ body.uk .actor.sheet {
   --actor-background-default: url("../assets/actor/actor_background.webp");
   --actor-header-default: url("../assets/ui/Actor_Header_Background.webp");
 }
-.window-content {
+.wod5e {
   box-shadow: 0 0 5px var(--system-color-1);
 }
-.window-content .actor-header,
-.window-content .tab {
+.wod5e .actor-header,
+.wod5e .tab {
   color: var(--system-color-5);
   --input-text-color: var(--system-color-5);
 }
