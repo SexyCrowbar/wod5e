@@ -136,6 +136,11 @@ export async function generateRollMessageData({
       dieImg = `${dieConfig.imgRoot}${dieFace}`
       dieClasses.push(dieConfig.css)
 
+      // Ensure that non-Brutal Rage dice can be rerolled
+      if (system === 'werewolf' && dieResult !== 'brutal') {
+        dieClasses.push('rerollable')
+      }
+
       // Add any necessary data to the dice object
       rollData.results[index].img = dieImg
       rollData.results[index].classes = dieClasses.join(' ')
@@ -143,12 +148,17 @@ export async function generateRollMessageData({
       rollData.results[index].title = dieTitle
 
       // Increase the number of criticals collected across the dice
-      if (dieResult === 'critical' && !die.discarded) criticals++
+      if (dieResult === 'critical' && !die.discarded) {
+        criticals++
+      }
+
+      // Increase the number of critfails collected across the dice
       if (
         (dieResult === 'criticalFailure' || dieResult === 'bestial' || dieResult === 'brutal') &&
         !die.discarded
-      )
+      ) {
         critFails++
+      }
 
       die.index = index
     })
