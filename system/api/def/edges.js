@@ -96,6 +96,10 @@ export class Edges extends BaseDefinitionClass {
   static greatdestiny = {
     label: 'WOD5E.HTR.GreatDestiny'
   }
+
+  static unnaturalchanges = {
+    label: 'WOD5E.HTR.UnnaturalChanges'
+  }
 }
 
 // Hook to call onReady when the game is ready
